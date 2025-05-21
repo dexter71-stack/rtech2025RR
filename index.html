@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Qual delícia do nosso cardápio é a sua cara?</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #0b3d91;
+      color: black;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .container {
+      max-width: 95%;
+      margin: 20px auto;
+      background-color: #f0f3f5;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+      text-align: center;
+    }
+
+    .dark-mode {
+      background-color: #121212;
+      color: #eee;
+    }
+
+    .dark-mode .container {
+      background-color: #1f1f1f;
+    }
+
+    h1 {
+      color: #27ae60;
+      font-size: 1.8em;
+      margin-bottom: 20px;
+    }
+
+    .pergunta {
+  background-image: url('https://i.pinimg.com/736x/ac/23/a8/ac23a83f798f5189a4d13db9da1d35d8.jpg');
+  background-size: cover;
+  background-position: center;
+  padding: 20px;
+  border-radius: 15px;
+  color: #000;
+  background-repeat: no-repeat;
+  background-blend-mode: lighten;
+}
+.pergunta p {
+  background-color: rgba(255, 255, 255, 0.8);
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 10px;
+}
+
+    .opcoes {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .opcao {
+      border: 3px solid #27ae60;
+      background-color: #dbe9d8;
+      border-radius: 12px;
+      padding: 12px;
+      width: 100%;
+      max-width: 300px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: #27ae60;
+      font-weight: bold;
+    }
+
+    .opcao:hover {
+      transform: scale(1.02);
+      background-color: #c1d9c3;
+    }
+
+    .opcao.selecionada {
+      border-color: #145a32;
+      background-color: #a9c8a4;
+      color: #145a32;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #enviar {
+      background-color: #27ae60;
+      color: white;
+      margin-right: 10px;
+    }
+
+    #resetarSelecao {
+      background-color: #145a32;
+      color: white;
+      display: none;
+    }
+
+   
+
+    #resultado {
+      margin-top: 25px;
+      font-size: 1.2em;
+    }
+
+    #resultado .alimento-nome {
+      font-size: 2em;
+      font-weight: bold;
+      color: #e74c3c;
+      margin-bottom: 10px;
+    }
+
+    .parabens {
+      font-size: 1.2em;
+      margin-top: 15px;
+      color: #27ae60;
+    }
+
+    .whatsapp-btn {
+      margin-top: 15px;
+      background-color: #25D366;
+      color: white;
+      padding: 10px 16px;
+      font-size: 0.9em;
+      border-radius: 8px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    img {
+      border-radius: 10px;
+      width: 100%;
+      max-width: 300px;
+      margin-top: 15px;
+    }
+
+    .autor-marca {
+      position: fixed;
+      bottom: 8px;
+      right: 12px;
+      font-size: 0.8em;
+      color: #f0f3f5;
+      text-shadow: 1px 1px 2px #145a32;
+      opacity: 0.9;
+    }
+
+    .progress-container {
+      width: 100%;
+      background-color: #ddd;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 20px 0;
+      height: 20px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background-color: #27ae60;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .floating-menu {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      z-index: 100;
+    }
+
+    .floating-menu button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.6em;
+      color: #fff;
+    }
+
+    .config-content {
+      display: none;
+      position: absolute;
+      top: 40px;
+      right: 0;
+      background-color: #f0f3f5;
+      color: #000;
+      padding: 10px;
+      border-radius: 10px;
+      width: 250px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      font-size: 0.9em;
+    }
+
+    .dark-mode .config-content {
+      background-color: #2a2a2a;
+      color: #eee;
+    }
+
+    .toggle-theme {
+      position: fixed;
+      top: 12px;
+      right: 60px;
+      background-color: #27ae60;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .mensagem-erro {
+      color: red;
+      font-size: 0.95em;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 480px) {
+      .pergunta p {
+        font-size: 1.1em;
+      }
+
+      .whatsapp-btn {
+        font-size: 0.8em;
+        padding: 8px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="floating-menu">
+    <button id="menuBtn">⚙️</button>
+    <div class="config-content" id="configContent">
+      <strong>Descrição dos Alimentos:</strong>
+      <p><b>Torta Salgada</b>: Sustenta, é acessível e cheia de vitaminas.</p>
+      <p><b>Chips de Batata</b>: Petisco crocante feito com casca, cheio de fibras.</p>
+      <p><b>Docinho de Coco Fit</b>: Saudável, leve e mata a vontade de doce.</p>
+      <p><b>Geleia de Morango</b>: Doce natural cheio de vitamina C.</p>
+      <p><b>Suco de Casca de Abacaxi</b>: Refrescante, digestivo e sustentável.</p>
+    </div>
+  </div>
+
+  <button class="toggle-theme" onclick="alternarTema()">Tema</button>
+
+  <div class="container">
+    <h1>Qual delícia do nosso cardápio é a sua cara?</h1>
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="pergunta" id="pergunta"></div>
+    <button id="enviar">Enviar</button>
+    <button id="resetarSelecao">Resetar seleção</button>
+    <div id="resultado"></div>
+  </div>
+
+  <div class="autor-marca">© David Dario Ferreira Bias</div>
+
+  <script>
+    document.getElementById("menuBtn").addEventListener("click", () => {
+      const el = document.getElementById("configContent");
+      el.style.display = el.style.display === "block" ? "none" : "block";
+    });
+
+    function alternarTema() {
+      document.body.classList.toggle("dark-mode");
+    }
+ const perguntas = [
+      {
+        texto: "O que você mais sente falta na sua alimentação?",
+        opcoes: {
+          A: "Um salgado que me sustente",
+          B: "Um petisco crocante e leve",
+          C: "Um doce saudável",
+          D: "Um sabor frutado natural",
+          E: "Um suco refrescante",
+        }
+      },
+      {
+        texto: "Em um lanche ideal, o que não pode faltar?",
+        opcoes: {
+          A: "Massa, legumes e sabor",
+          B: "Algo crocante e nutritivo",
+          C: "Sabor de coco leve e docinho",
+          D: "Fruta de verdade",
+          E: "Refresco com reaproveitamento",
+        }
+      },
+      {
+        texto: "Qual dessas frases mais combina com você?",
+        opcoes: {
+          A: "Quero praticidade e sustância.",
+          B: "Aproveito tudo que dá!",
+          C: "Cuido do corpo, mas gosto de um docinho.",
+          D: "Fruta é minha sobremesa preferida.",
+          E: "Adoro sucos naturais e sustentáveis.",
+        }
+      },
+      {
+        texto: "Se você fosse um ingrediente, seria...",
+        opcoes: {
+          A: "Ovo, porque vai com tudo",
+          B: "Batata, porque ninguém desperdiça",
+          C: "Coco, porque é saudável e doce",
+          D: "Morango, porque é natural e gostoso",
+          E: "Casca de abacaxi, porque ninguém espera tanto sabor",
+        }
+      },
+      {
+        texto: "Qual dessas causas você apoia mais?",
+        opcoes: {
+          A: "Alimentação acessível e nutritiva",
+          B: "Combate ao desperdício",
+          C: "Sobremesas mais saudáveis",
+          D: "Resgate do sabor natural das frutas",
+          E: "Reaproveitamento na cozinha",
+        }
+      }
+    ];
+
+    const alimentos = {
+      A: {
+        nome: "Torta Salgada",
+        descricao: "Rica em proteínas, ferro, vitaminas B. Ideal para quem precisa de energia.",
+        img: "https://claudia.abril.com.br/wp-content/uploads/2020/02/receita-torta-frango-catupiry.jpg?quality=70"
+      },
+      B: {
+        nome: "Chips com casca de batata",
+        descricao: "Rico em fibras, potássio, vitamina C. Ideal para quem quer algo crocante e saudável.",
+        img: "https://receitaki.com.br/imagens/receitas/547/chips-de-casca-de-batata-doce-crocantes-e-saudaveis.webp"
+      },
+      C: {
+        nome: "Docinho de Coco Fit",
+        descricao: "Leve, saudável e perfeito para matar a vontade de um doce sem exagero.",
+        img: "https://receitadaboa.com.br/wp-content/uploads/2024/12/iStock-1803578284-1.jpg"
+      },
+      D: {
+        nome: "Geleia de Morango",
+        descricao: "Rica em vitamina C e antioxidantes. Ideal para quem quer um doce natural.",
+        img: "https://www.receiteria.com.br/wp-content/uploads/geleia-de-morango-simples-capa.png"
+      },
+      E: {
+        nome: "Suco de casca de abacaxi",
+        descricao: "Rico em vitamina C, bromelina e fibras. Ideal para digestão e intestino.",
+        img: "https://marmitexdesucesso.com.br/wp-content/uploads/2024/04/Pode-fazer-suco-de-abacaxi-com-casca.jpg"
+      },
+    };
+
+    
+    
+    const perguntaEl = document.getElementById("pergunta");
+    const enviarBtn = document.getElementById("enviar");
+    const resetarBtn = document.getElementById("resetarSelecao");
+    const refazerBtn = document.getElementById("refazerQuiz");
+    const resultadoEl = document.getElementById("resultado");
+    const progressBar = document.getElementById("progressBar");
+
+    let indice = 0;
+    let respostas = [];
+    let selecionada = null; // Adicione fora de qualquer função
+
+
+    function mostrarPergunta() {
+      const p = perguntas[indice];
+      perguntaEl.innerHTML = `
+        <p>${p.texto}</p>
+        <div class="opcoes">
+          ${Object.entries(p.opcoes).map(([letra, texto]) => `
+            <button class="opcao" data-resposta="${letra}">${texto}</button>
+          `).join("")}
+        </div>
+        <div class="mensagem-erro" id="mensagemErro"></div>
+      `;
+      resetarBtn.style.display = "none";
+      selecionada = null;
+      atualizarProgresso();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      document.querySelectorAll(".opcao").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".opcao").forEach(b => b.classList.remove("selecionada"));
+          btn.classList.add("selecionada");
+          selecionada = btn.getAttribute("data-resposta");
+          resetarBtn.style.display = "inline-block";
+          document.getElementById("mensagemErro").textContent = "";
+        });
+      });
+    }
+
+    function atualizarProgresso() {
+     const progresso = ((indice + 1) / perguntas.length) * 100;
+     progressBar.style.width = `${progresso}%`;
+    }
+
+   enviarBtn.addEventListener("click", () => {
+  if (!selecionada) {
+    document.getElementById("mensagemErro").textContent = "Por favor, selecione uma opção antes de continuar.";
+    return;
+  }
+
+  respostas.push(selecionada);
+selecionada = null;
+
+  if (indice < perguntas.length - 1) {
+    indice++;
+    mostrarPergunta();
+  } else {
+    mostrarResultado();
+  }
+});
+
+    resetarBtn.addEventListener("click", () => {
+      selecionada = null;
+      document.querySelectorAll(".opcao").forEach(b => b.classList.remove("selecionada"));
+      resetarBtn.style.display = "none";
+    });
+
+
+    function mostrarResultado() {
+  perguntaEl.innerHTML = "";
+  perguntaEl.style.backgroundImage = "none";  // remove imagem de fundo
+  // ou alternativa: perguntaEl.style.display = "none";
+
+  enviarBtn.style.display = "none";
+  resetarBtn.style.display = "none";
+
+  const contagem = respostas.reduce((acc, letra) => {
+    acc[letra] = (acc[letra] || 0) + 1;
+    return acc;
+  }, {});
+  let maxLetra = Object.keys(contagem).reduce((a, b) => contagem[a] > contagem[b] ? a : b);
+  const alimento = alimentos[maxLetra];
+
+  resultadoEl.innerHTML = `
+    <div class="alimento-nome">${alimento.nome}</div>
+    <img src="${alimento.img}" alt="${alimento.nome}" />
+    <p>${alimento.descricao}</p>
+    <p class="parabens">Parabéns por concluir o quiz!</p>
+    <div style="display: flex; justify-content: center; gap: 12px; margin-top: 15px; flex-wrap: wrap;">
+      <a class="whatsapp-btn" href="https://wa.me/?text=Acabei%20de%20fazer%20um%20quiz%20e%20descobri%20que%20a%20minha%20cara%20é%20${encodeURIComponent(alimento.nome)}!%20Faça%20também!https://dexter71-stack.github.io/rtech2025RR/" target="_blank" style="flex: 1 1 auto; text-align: center;">
+        Compartilhar no WhatsApp
+      </a>
+      <button id="refazerQuizFinal" style="flex: 1 1 auto; background-color: #2980b9; color: white; border: none; border-radius: 8px; padding: 10px 20px; cursor: pointer;">
+        Refazer Quiz
+      </button>
+    </div>
+  `;
+
+  document.getElementById("refazerQuizFinal").addEventListener("click", () => {
+    indice = 0;
+    respostas = [];
+    selecionada = null;
+    resultadoEl.innerHTML = "";
+    enviarBtn.style.display = "inline-block";
+    
+    // Voltar a mostrar a pergunta com fundo
+    perguntaEl.style.display = "block";
+    perguntaEl.style.backgroundImage = "url('https://i.pinimg.com/736x/ac/23/a8/ac23a83f798f5189a4d13db9da1d35d8.jpg')";
+
+    mostrarPergunta();
+  });
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+    // Inicia o quiz
+    mostrarPergunta();
+  </script>
+</body>
+</html>
